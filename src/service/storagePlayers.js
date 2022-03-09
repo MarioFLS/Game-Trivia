@@ -1,7 +1,7 @@
-import fetchToken from './fetchToken';
+/* import fetchToken from './fetchToken'; */
 
-const saveToken = async () => {
-  const returnApi = await fetchToken();
+const saveToken = async (returnApi) => {
+  /* const returnApi = await fetchToken(); */
   localStorage.setItem('token', returnApi);
 };
 

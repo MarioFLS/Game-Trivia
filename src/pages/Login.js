@@ -5,7 +5,6 @@ import { connect } from 'react-redux';
 import logo from '../trivia.png';
 import fetchToken from '../service/fetchToken';
 import fetchApiTokenThunk from '../redux/actions';
-import storagePlayers from '../service/storagePlayers';
 
 class Login extends Component {
   state = {
@@ -42,7 +41,6 @@ class Login extends Component {
     console.log(dispatch);
     event.preventDefault();
     dispatch(fetchApiTokenThunk());
-    storagePlayers();
   }
 
   render() {
