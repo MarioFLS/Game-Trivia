@@ -1,9 +1,13 @@
 .App {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  justify-content: center;
   text-align: center;
 }
 
 .App-logo {
-  height: 40vmin;
+  height: 15vh;
   pointer-events: none;
 }
 
