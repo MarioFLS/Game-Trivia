@@ -1,12 +1,17 @@
 import React, { Component } from 'react';
 import '../css/Login.css';
 import logo from '../trivia.png';
+import fetchToken from '../service/fetchToken';
 
 class Login extends Component {
   state = {
     name: '',
     email: '',
     isDisabled: true,
+  }
+
+  componentDidMount = async () => {
+    await fetchToken();
   }
 
   handleChange = ({ target }) => {
