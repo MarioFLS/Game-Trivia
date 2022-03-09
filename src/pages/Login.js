@@ -45,14 +45,14 @@ class Login extends Component {
 
   render() {
     const { name, email, isDisabled } = this.state;
+    const { history } = this.props;
     return (
       <div>
-        <div className="App">
+        <div className="login-container">
           <header>
-            <img src={ logo } className="App-logo" alt="logo" />
+            <img src={ logo } className="trivia-logo" alt="logo" />
           </header>
-          <p>SUA VEZ</p>
-          <form>
+          <form className="form-login">
             <label htmlFor="name">
               <input
                 type="text"
@@ -74,16 +74,24 @@ class Login extends Component {
                 onChange={ this.handleChange }
                 value={ email }
               />
-              <button
-                type="submit"
-                data-testid="btn-play"
-                disabled={ isDisabled }
-                onClick={ (event) => this.HandleClickButton(event) }
-              >
-                Play
-              </button>
             </label>
+            <button
+              type="submit"
+              data-testid="btn-play"
+              disabled={ isDisabled }
+              onClick={ (event) => this.HandleClickButton(event) }
+            >
+              Play
+            </button>
           </form>
+          <button
+            className="btn-config"
+            type="button"
+            data-testid="btn-settings"
+            onClick={ () => history.push('/config') }
+          >
+            Configurações
+          </button>
         </div>
       </div>
     );
@@ -92,6 +100,9 @@ class Login extends Component {
 
 Login.propTypes = {
   dispatch: PropTypes.func.isRequired,
+  history: PropTypes.shape({
+    push: PropTypes.func.isRequired,
+  }).isRequired,
 };
 
 export default connect()(Login);
