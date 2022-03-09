@@ -45,6 +45,7 @@ class Login extends Component {
 
   render() {
     const { name, email, isDisabled } = this.state;
+    const { history } = this.props;
     return (
       <div>
         <div className="App">
@@ -84,6 +85,13 @@ class Login extends Component {
               </button>
             </label>
           </form>
+          <button
+            type="button"
+            data-testid="btn-settings"
+            onClick={ () => history.push('/config') }
+          >
+            Configurações
+          </button>
         </div>
       </div>
     );
@@ -92,6 +100,9 @@ class Login extends Component {
 
 Login.propTypes = {
   dispatch: PropTypes.func.isRequired,
+  history: PropTypes.shape({
+    push: PropTypes.func.isRequired,
+  }).isRequired,
 };
 
 export default connect()(Login);
