@@ -1,7 +1,11 @@
+import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import '../css/Login.css';
+import { connect } from 'react-redux';
 import logo from '../trivia.png';
 import fetchToken from '../service/fetchToken';
+import fetchApiTokenThunk from '../redux/actions';
+import storagePlayers from '../service/storagePlayers';
 
 class Login extends Component {
   state = {
@@ -33,6 +37,14 @@ class Login extends Component {
     });
   }
 
+  HandleClickButton = (event) => {
+    const { dispatch } = this.props;
+    console.log(dispatch);
+    event.preventDefault();
+    dispatch(fetchApiTokenThunk());
+    storagePlayers();
+  }
+
   render() {
     const { name, email, isDisabled } = this.state;
     return (
@@ -41,6 +53,7 @@ class Login extends Component {
           <header>
             <img src={ logo } className="App-logo" alt="logo" />
           </header>
+          <p>SUA VEZ</p>
           <form>
             <label htmlFor="name">
               <input
@@ -67,6 +80,7 @@ class Login extends Component {
                 type="submit"
                 data-testid="btn-play"
                 disabled={ isDisabled }
+                onClick={ (event) => this.HandleClickButton(event) }
               >
                 Play
               </button>
@@ -78,4 +92,8 @@ class Login extends Component {
   }
 }
 
-export default Login;
+Login.propTypes = {
+  dispatch: PropTypes.func.isRequired,
+};
+
+export default connect()(Login);
