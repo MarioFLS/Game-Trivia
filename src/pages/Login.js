@@ -4,7 +4,7 @@ import '../css/Login.css';
 import { connect } from 'react-redux';
 import logo from '../trivia.png';
 import fetchToken from '../service/fetchToken';
-import fetchApiTokenThunk from '../redux/actions';
+import { fetchApiTokenThunk, saveUser } from '../redux/actions';
 
 class Login extends Component {
   state = {
@@ -37,10 +37,13 @@ class Login extends Component {
   }
 
   HandleClickButton = (event) => {
-    const { dispatch } = this.props;
+    const { name, email } = this.state;
+    const { dispatch, history } = this.props;
     console.log(dispatch);
     event.preventDefault();
     dispatch(fetchApiTokenThunk());
+    dispatch(saveUser({ name, email }));
+    history.push('/game');
   }
 
   render() {
