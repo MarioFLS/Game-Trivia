@@ -12,6 +12,8 @@ export function player(state = initialStateUser, action) {
   case 'ADD_USER':
     return {
       ...state,
+      name: action.payload.name,
+      gravatarEmail: action.payload.email,
     };
   default:
     return state;
