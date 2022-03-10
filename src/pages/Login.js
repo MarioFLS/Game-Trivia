@@ -37,10 +37,11 @@ class Login extends Component {
   }
 
   HandleClickButton = (event) => {
-    const { dispatch } = this.props;
+    const { dispatch, history } = this.props;
     console.log(dispatch);
     event.preventDefault();
     dispatch(fetchApiTokenThunk());
+    history.push('/game');
   }
 
   render() {
