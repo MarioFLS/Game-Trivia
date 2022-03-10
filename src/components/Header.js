@@ -2,23 +2,22 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import md5 from 'crypto-js/md5';
-import { getImage } from '../service/fetchToken';
 
 class Header extends Component {
   state = {
     userImage: '',
   }
 
-  componentDidMount = async () => {
-    const convert = await this.convertEmailToHash();
-    this.setState({ userImage: convert.url });
+  componentDidMount() {
+    const convertEmailToHash = this.convertEmailToHash();
+    const userImage = (`https://www.gravatar.com/avatar/${convertEmailToHash}`);
+    this.setState({ userImage });
   }
 
-  convertEmailToHash = async () => {
+  convertEmailToHash = () => {
     const { userEmail } = this.props;
     const hashEmail = md5(userEmail).toString();
-    const userImage = await getImage(hashEmail);
-    return userImage;
+    return hashEmail;
   }
 
   render() {

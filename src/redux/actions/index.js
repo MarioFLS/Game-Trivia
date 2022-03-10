@@ -1,4 +1,4 @@
-import { fetchToken } from '../../service/fetchToken';
+import fetchToken from '../../service/fetchToken';
 import storagePlayers from '../../service/storagePlayers';
 
 export const saveUser = (payload) => ({

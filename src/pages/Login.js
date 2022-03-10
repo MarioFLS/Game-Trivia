@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import '../css/Login.css';
 import { connect } from 'react-redux';
 import logo from '../trivia.png';
-import { fetchToken } from '../service/fetchToken';
+import fetchToken from '../service/fetchToken';
 import { fetchApiTokenThunk, saveUser } from '../redux/actions';
 
 class Login extends Component {
