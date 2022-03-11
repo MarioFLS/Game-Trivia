@@ -74,21 +74,22 @@ class Login extends Component {
             </label>
             <button
               type="submit"
+              className="btn-play"
               data-testid="btn-play"
               disabled={ isDisabled }
               onClick={ (event) => this.HandleClickButton(event) }
             >
               Play
             </button>
+            <button
+              className="btn-config"
+              type="button"
+              data-testid="btn-settings"
+              onClick={ () => history.push('/config') }
+            >
+              Configurações
+            </button>
           </form>
-          <button
-            className="btn-config"
-            type="button"
-            data-testid="btn-settings"
-            onClick={ () => history.push('/config') }
-          >
-            Configurações
-          </button>
         </div>
       </div>
     );

@@ -5,9 +5,7 @@ import fetchQuestions from '../service/fetchQuestions';
 import fetchToken from '../service/fetchToken';
 
 class Game extends Component {
-  state = {
-    questions: {},
-  };
+  state = { questions: {} };
 
   async componentDidMount() {
     await this.getQuestions();
@@ -26,6 +24,7 @@ class Game extends Component {
     this.setState({ questions });
   }
 
+  /* referência para uso do sort(): https://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array */
   mapQuestions = () => {
     const { questions } = this.state;
     const { results } = questions;
@@ -37,19 +36,22 @@ class Game extends Component {
           index,
         ) => {
           let indexWrongQuestions = 0;
+
           const addIndex = () => {
             indexWrongQuestions += 1;
             return indexWrongQuestions - 1;
           };
+
           const erroQuestions = [...incorrectAnswers, correctAnswer]
             .sort(() => ((Math.random() - (1 / 2))));
+
           return (
             <section key={ index }>
               <h4 data-testid="question-text">{question}</h4>
               <p data-testid="question-category">{category}</p>
               <div data-testid="answer-options">
-                {erroQuestions
-                  .map((questionsClick, indexQuestions) => (
+                {
+                  erroQuestions.map((questionsClick, indexQuestions) => (
                     <button
                       key={ indexQuestions }
                       data-testid={ questionsClick.includes(correctAnswer)
@@ -58,8 +60,8 @@ class Game extends Component {
                     >
                       {questionsClick}
                     </button>
-
-                  ))}
+                  ))
+                }
               </div>
             </section>
           );
@@ -68,9 +70,6 @@ class Game extends Component {
   }
 
   render() {
-    const { questions } = this.state;
-    const { results } = questions;
-    console.log(results);
     return (
       <div>
         <h2>Algo</h2>
