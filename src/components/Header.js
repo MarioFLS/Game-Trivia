@@ -22,7 +22,6 @@ class Header extends Component {
 
   render() {
     const { userImage } = this.state;
-    console.log(userImage);
     const { userName, score } = this.props;
     return (
       <header>

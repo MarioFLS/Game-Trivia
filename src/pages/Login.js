@@ -13,10 +13,6 @@ class Login extends Component {
     isDisabled: true,
   }
 
-  componentDidMount = async () => {
-    await fetchToken();
-  }
-
   handleChange = ({ target }) => {
     const { name, value } = target;
     this.setState({
@@ -27,21 +23,17 @@ class Login extends Component {
   validateButton = () => {
     const { name, email } = this.state;
     if (name.length > 0 && email.length > 0) {
-      return this.setState({
-        isDisabled: false,
-      });
+      return this.setState({ isDisabled: false });
     }
-    return this.setState({
-      isDisabled: true,
-    });
+    return this.setState({ isDisabled: true });
   }
 
-  HandleClickButton = (event) => {
-    const { name, email } = this.state;
-    const { dispatch, history } = this.props;
-    console.log(dispatch);
+  HandleClickButton = async (event) => {
     event.preventDefault();
-    dispatch(fetchApiTokenThunk());
+    const { dispatch, history } = this.props;
+    const { name, email } = this.state;
+    const response = await fetchToken();
+    await dispatch(fetchApiTokenThunk(response));
     dispatch(saveUser({ name, email }));
     history.push('/game');
   }
@@ -80,21 +72,22 @@ class Login extends Component {
             </label>
             <button
               type="submit"
+              className="btn-play"
               data-testid="btn-play"
               disabled={ isDisabled }
               onClick={ (event) => this.HandleClickButton(event) }
             >
               Play
             </button>
+            <button
+              className="btn-config"
+              type="button"
+              data-testid="btn-settings"
+              onClick={ () => history.push('/config') }
+            >
+              Configurações
+            </button>
           </form>
-          <button
-            className="btn-config"
-            type="button"
-            data-testid="btn-settings"
-            onClick={ () => history.push('/config') }
-          >
-            Configurações
-          </button>
         </div>
       </div>
     );
