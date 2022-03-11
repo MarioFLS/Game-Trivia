@@ -23,9 +23,7 @@ class Login extends Component {
   validateButton = () => {
     const { name, email } = this.state;
     if (name.length > 0 && email.length > 0) {
-      return this.setState({
-        isDisabled: false,
-      });
+      return this.setState({ isDisabled: false });
     }
     return this.setState({
       isDisabled: true,
