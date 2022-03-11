@@ -6,7 +6,12 @@ import fetchToken from '../service/fetchToken';
 import Header from '../components/Header';
 import '../css/Game.css';
 
+/* referência para uso do sort(): https://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array */
+
 const oneSecond = 1000;
+let indexWrongQuestions = 0;
+const errorApi = 3;
+
 class Game extends Component {
   state = {
     questions: {},
@@ -25,8 +30,8 @@ class Game extends Component {
   async getQuestions() {
     const { token } = this.props;
     let questions = await fetchQuestions(token);
-    const errorApi = 3;
     const { response_code: responseCode } = questions;
+
     if (responseCode === errorApi) {
       const newToken = await fetchToken();
       questions = await fetchQuestions(newToken);
@@ -35,14 +40,11 @@ class Game extends Component {
   }
 
   checkAnswer = (correctAnswer) => {
-    console.log(correctAnswer);
     const answerButtons = document.querySelectorAll('.answer-buttons');
     answerButtons.forEach((button) => {
       if (button.innerText === correctAnswer) {
         button.className = 'correct_answer';
-      } else {
-        button.className = 'wrong_answers';
-      }
+      } else { button.className = 'wrong_answers'; }
     });
   }
 
@@ -50,9 +52,9 @@ class Game extends Component {
     const { questions } = this.state;
     const { results } = questions;
     const answers = results
-      .map(({ correct_answer: correctAnswer,
-        incorrect_answers: incorrectAnswers }) => [...incorrectAnswers, correctAnswer]
-        .sort(() => Math.random() - 1 / 2));
+      .map((
+        { correct_answer: correctAnswer, incorrect_answers: incorrectAnswers },
+      ) => [...incorrectAnswers, correctAnswer].sort(() => Math.random() - 1 / 2));
     this.setState({ answers });
   }
 
@@ -62,7 +64,6 @@ class Game extends Component {
     return this.isDisabed();
   }
 
-  /* referência para uso do sort(): https://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array */
   mapQuestions = () => {
     const { questions, answers, isDisabed } = this.state;
     const { results } = questions;
@@ -72,8 +73,6 @@ class Game extends Component {
           { category, correct_answer: correctAnswer, question },
           index,
         ) => {
-          let indexWrongQuestions = 0;
-
           const addIndex = () => {
             indexWrongQuestions += 1;
             return indexWrongQuestions - 1;
@@ -107,9 +106,7 @@ class Game extends Component {
 
   isDisabed =() => {
     const { timming } = this.state;
-    if (timming === 0) {
-      this.setState({ isDisabed: true });
-    }
+    if (timming === 0) { this.setState({ isDisabed: true }); }
   }
 
   render() {
@@ -118,7 +115,7 @@ class Game extends Component {
       <div>
         <Header />
         {this.mapQuestions()}
-        {`Você tem: ${timming}s`}
+        <h3>{`Você tem: ${timming}s`}</h3>
       </div>
     );
   }
