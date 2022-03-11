@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import fetchQuestions from '../service/fetchQuestions';
 import fetchToken from '../service/fetchToken';
+import Header from '../components/Header';
 
 class Game extends Component {
   state = { questions: {} };
@@ -72,7 +73,7 @@ class Game extends Component {
   render() {
     return (
       <div>
-        <h2>Algo</h2>
+        <Header />
         {this.mapQuestions()}
       </div>
     );
