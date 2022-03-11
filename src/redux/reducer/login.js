@@ -5,7 +5,7 @@ const initialStateUser = {
   gravatarEmail: '',
 };
 
-const initialStateToken = {};
+const initialStateToken = '';
 
 export function player(state = initialStateUser, action) {
   switch (action.type) {

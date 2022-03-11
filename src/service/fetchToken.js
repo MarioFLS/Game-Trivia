@@ -4,7 +4,6 @@ const fetchToken = async () => {
   try {
     const response = await fetch(url);
     const data = await response.json();
-    console.log(data);
     return data.token;
   } catch (err) {
     return err;

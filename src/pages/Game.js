@@ -2,39 +2,81 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import fetchQuestions from '../service/fetchQuestions';
+import fetchToken from '../service/fetchToken';
 
 class Game extends Component {
   state = {
-    apiQeA: '',
+    questions: {},
   };
 
-  componentDidMount() {
-    this.getQuestions();
+  async componentDidMount() {
+    await this.getQuestions();
+    this.mapQuestions();
   }
 
   async getQuestions() {
     const { token } = this.props;
-    if (typeof token === 'string') {
-      console.log(typeof token);
-      const apiReturn = fetchQuestions(token);
-      console.log(await apiReturn);
-      return apiReturn;
+    let questions = await fetchQuestions(token);
+    const errorApi = 3;
+    const { response_code: responseCode } = questions;
+    if (responseCode === errorApi) {
+      const newToken = await fetchToken();
+      questions = await fetchQuestions(newToken);
+    }
+    this.setState({ questions });
+  }
+
+  mapQuestions = () => {
+    const { questions } = this.state;
+    const { results } = questions;
+    if (results) {
+      return results
+        .map((
+          { category, correct_answer: correctAnswer,
+            incorrect_answers: incorrectAnswers, question },
+          index,
+        ) => {
+          let indexWrongQuestions = 0;
+          const addIndex = () => {
+            indexWrongQuestions += 1;
+            return indexWrongQuestions - 1;
+          };
+          const erroQuestions = [...incorrectAnswers, correctAnswer]
+            .sort(() => ((Math.random() - (1 / 2))));
+          return (
+            <section key={ index }>
+              <h4 data-testid="question-text">{question}</h4>
+              <p data-testid="question-category">{category}</p>
+              <div data-testid="answer-options">
+                {erroQuestions
+                  .map((questionsClick, indexQuestions) => (
+                    <button
+                      key={ indexQuestions }
+                      data-testid={ questionsClick.includes(correctAnswer)
+                        ? 'correct-answer' : `wrong-answer-${addIndex()}` }
+                      type="button"
+                    >
+                      {questionsClick}
+                    </button>
+
+                  ))}
+              </div>
+            </section>
+          );
+        })[0];
     }
   }
 
-  questions = async () => {
-    const apiQeA = await this.getQuestions();
-    this.setState({
-      apiQeA,
-    });
-  };
-
   render() {
-    const { token } = this.props;
-    const { apiQeA } = this.state;
-    console.log(apiQeA);
-    console.log(typeof token);
-    return <div />;
+    const { questions } = this.state;
+    const { results } = questions;
+    console.log(results);
+    return (
+      <div>
+        <h2>Algo</h2>
+        {this.mapQuestions()}
+      </div>
+    );
   }
 }
 const mapStateToProps = (state) => ({ token: state.token });

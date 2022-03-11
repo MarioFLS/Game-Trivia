@@ -4,17 +4,13 @@ import '../css/Login.css';
 import { connect } from 'react-redux';
 import logo from '../trivia.png';
 import fetchToken from '../service/fetchToken';
-import fetchApiTokenThunk from '../redux/actions';
+import { fetchApiTokenThunk } from '../redux/actions';
 
 class Login extends Component {
   state = {
     name: '',
     email: '',
     isDisabled: true,
-  }
-
-  componentDidMount = async () => {
-    await fetchToken();
   }
 
   handleChange = ({ target }) => {
@@ -36,11 +32,11 @@ class Login extends Component {
     });
   }
 
-  HandleClickButton = (event) => {
-    const { dispatch, history } = this.props;
-    console.log(dispatch);
+  HandleClickButton = async (event) => {
     event.preventDefault();
-    dispatch(fetchApiTokenThunk());
+    const { dispatch, history } = this.props;
+    const response = await fetchToken();
+    await dispatch(fetchApiTokenThunk(response));
     history.push('/game');
   }
 
