@@ -25,9 +25,7 @@ class Login extends Component {
     if (name.length > 0 && email.length > 0) {
       return this.setState({ isDisabled: false });
     }
-    return this.setState({
-      isDisabled: true,
-    });
+    return this.setState({ isDisabled: true });
   }
 
   HandleClickButton = async (event) => {
