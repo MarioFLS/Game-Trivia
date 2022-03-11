@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import fetchQuestions from '../service/fetchQuestions';
 import fetchToken from '../service/fetchToken';
 import Header from '../components/Header';
+import '../css/Game.css';
 
 class Game extends Component {
   state = { questions: {} };
@@ -23,6 +24,18 @@ class Game extends Component {
       questions = await fetchQuestions(newToken);
     }
     this.setState({ questions });
+  }
+
+  checkAnswer = (correctAnswer) => {
+    console.log(correctAnswer);
+    const answerButtons = document.querySelectorAll('.answer-buttons');
+    answerButtons.forEach((button) => {
+      if (button.innerText === correctAnswer) {
+        button.className = 'correct_answer';
+      } else {
+        button.className = 'wrong_answers';
+      }
+    });
   }
 
   /* referência para uso do sort(): https://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array */
@@ -54,6 +67,8 @@ class Game extends Component {
                 {
                   erroQuestions.map((questionsClick, indexQuestions) => (
                     <button
+                      onClick={ () => this.checkAnswer(correctAnswer) }
+                      className="answer-buttons"
                       key={ indexQuestions }
                       data-testid={ questionsClick.includes(correctAnswer)
                         ? 'correct-answer' : `wrong-answer-${addIndex()}` }
