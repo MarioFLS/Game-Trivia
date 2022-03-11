@@ -1,4 +1,3 @@
-import fetchToken from '../../service/fetchToken';
 import storagePlayers from '../../service/storagePlayers';
 
 export const saveUser = (payload) => ({
@@ -11,8 +10,7 @@ const fetchApiToken = (token) => ({
   token,
 });
 
-export const fetchApiTokenThunk = () => async (dispatch) => {
-  const response = await fetchToken();
+export const fetchApiTokenThunk = (response) => async (dispatch) => {
   storagePlayers(response);
   dispatch(fetchApiToken(response));
 };
