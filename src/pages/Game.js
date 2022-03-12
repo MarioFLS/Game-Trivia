@@ -15,6 +15,8 @@ const errorApi = 3;
 class Game extends Component {
   state = {
     questions: {},
+    isButtonVisible: false,
+    indexQuestion: 0,
     answers: [],
     timming: 30,
     isDisabed: false,
@@ -46,10 +48,17 @@ class Game extends Component {
         button.className = 'correct_answer';
       } else { button.className = 'wrong_answers'; }
     });
+    this.setState({ isButtonVisible: true });
   }
 
-  answersRandom = () => {
-    const { questions } = this.state;
+  buttonNextQuestion = () => {
+    const { indexQuestion } = this.state;
+    this.setState({ indexQuestion: indexQuestion + 1, isButtonVisible: false });
+  }
+
+  /* referência para uso do sort(): https://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array */
+  mapQuestions = () => {
+    const { questions, indexQuestion } = this.state;
     const { results } = questions;
     const answers = results
       .map((
@@ -100,7 +109,7 @@ class Game extends Component {
               </div>
             </section>
           );
-        })[0];
+        })[indexQuestion];
     }
   }
 
@@ -110,11 +119,20 @@ class Game extends Component {
   }
 
   render() {
-    const { timming } = this.state;
+    const { timming, isButtonVisible } = this.state;
     return (
       <div>
         <Header />
         {this.mapQuestions()}
+        { isButtonVisible
+            && (
+              <button
+                type="button"
+                onClick={ this.buttonNextQuestion }
+                data-testid="btn-next"
+              >
+                Next
+              </button>) }
         <h3>{`Você tem: ${timming}s`}</h3>
       </div>
     );
