@@ -1,6 +1,6 @@
 const initialStateUser = {
   name: '',
-  assertions: '',
+  assertions: 0,
   score: 0,
   gravatarEmail: '',
 };
