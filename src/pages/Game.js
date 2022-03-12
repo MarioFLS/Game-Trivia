@@ -6,23 +6,34 @@ import fetchToken from '../service/fetchToken';
 import Header from '../components/Header';
 import '../css/Game.css';
 
+/* referência para uso do sort(): https://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array */
+
+const oneSecond = 1000;
+let indexWrongQuestions = 0;
+const errorApi = 3;
+
 class Game extends Component {
   state = {
     questions: {},
     isButtonVisible: false,
     indexQuestion: 0,
+    answers: [],
+    timming: 30,
+    isDisabed: false,
   };
 
   async componentDidMount() {
     await this.getQuestions();
     this.mapQuestions();
+    setInterval(this.timeToAwsers, oneSecond);
+    this.answersRandom();
   }
 
   async getQuestions() {
     const { token } = this.props;
     let questions = await fetchQuestions(token);
-    const errorApi = 3;
     const { response_code: responseCode } = questions;
+
     if (responseCode === errorApi) {
       const newToken = await fetchToken();
       questions = await fetchQuestions(newToken);
@@ -35,9 +46,7 @@ class Game extends Component {
     answerButtons.forEach((button) => {
       if (button.innerText === correctAnswer) {
         button.className = 'correct_answer';
-      } else {
-        button.className = 'wrong_answers';
-      }
+      } else { button.className = 'wrong_answers'; }
     });
     this.setState({ isButtonVisible: true });
   }
@@ -51,34 +60,44 @@ class Game extends Component {
   mapQuestions = () => {
     const { questions, indexQuestion } = this.state;
     const { results } = questions;
-    if (results) {
+    const answers = results
+      .map((
+        { correct_answer: correctAnswer, incorrect_answers: incorrectAnswers },
+      ) => [...incorrectAnswers, correctAnswer].sort(() => Math.random() - 1 / 2));
+    this.setState({ answers });
+  }
+
+  timeToAwsers = () => {
+    const { timming } = this.state;
+    if (timming > 0) return this.setState({ timming: timming - 1 });
+    return this.isDisabed();
+  }
+
+  mapQuestions = () => {
+    const { questions, answers, isDisabed } = this.state;
+    const { results } = questions;
+    if (results && answers.length > 0) {
       return results
         .map((
-          { category, correct_answer: correctAnswer,
-            incorrect_answers: incorrectAnswers, question },
+          { category, correct_answer: correctAnswer, question },
           index,
         ) => {
-          let indexWrongQuestions = 0;
-
           const addIndex = () => {
             indexWrongQuestions += 1;
             return indexWrongQuestions - 1;
           };
-
-          const erroQuestions = [...incorrectAnswers, correctAnswer]
-            .sort(() => ((Math.random() - (1 / 2))));
-
           return (
             <section key={ index }>
               <h4 data-testid="question-text">{question}</h4>
               <p data-testid="question-category">{category}</p>
               <div data-testid="answer-options">
                 {
-                  erroQuestions.map((questionsClick, indexQuestions) => (
+                  answers[0].map((questionsClick, indexQuestions) => (
                     <button
                       onClick={ () => this.checkAnswer(correctAnswer) }
                       className="answer-buttons"
                       key={ indexQuestions }
+                      disabled={ isDisabed }
                       data-testid={ questionsClick.includes(correctAnswer)
                         ? 'correct-answer' : `wrong-answer-${addIndex()}` }
                       type="button"
@@ -94,8 +113,13 @@ class Game extends Component {
     }
   }
 
+  isDisabed =() => {
+    const { timming } = this.state;
+    if (timming === 0) { this.setState({ isDisabed: true }); }
+  }
+
   render() {
-    const { isButtonVisible } = this.state;
+    const { timming, isButtonVisible } = this.state;
     return (
       <div>
         <Header />
@@ -109,6 +133,7 @@ class Game extends Component {
               >
                 Next
               </button>) }
+        <h3>{`Você tem: ${timming}s`}</h3>
       </div>
     );
   }
