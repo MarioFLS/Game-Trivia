@@ -57,8 +57,8 @@ class Game extends Component {
   }
 
   /* referência para uso do sort(): https://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array */
-  mapQuestions = () => {
-    const { questions, indexQuestion } = this.state;
+  answersRandom = () => {
+    const { questions } = this.state;
     const { results } = questions;
     const answers = results
       .map((
@@ -74,7 +74,7 @@ class Game extends Component {
   }
 
   mapQuestions = () => {
-    const { questions, answers, isDisabed } = this.state;
+    const { questions, answers, isDisabed, indexQuestion } = this.state;
     const { results } = questions;
     if (results && answers.length > 0) {
       return results
@@ -92,7 +92,7 @@ class Game extends Component {
               <p data-testid="question-category">{category}</p>
               <div data-testid="answer-options">
                 {
-                  answers[0].map((questionsClick, indexQuestions) => (
+                  answers[indexQuestion].map((questionsClick, indexQuestions) => (
                     <button
                       onClick={ () => this.checkAnswer(correctAnswer) }
                       className="answer-buttons"
