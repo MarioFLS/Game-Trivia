@@ -31,11 +31,11 @@ class Header extends Component {
           data-testid="header-profile-picture"
         />}
         <h3 data-testid="header-player-name">
-          Nome:
+          Nome
           {userName}
         </h3>
         <h3 data-testid="header-score">
-          Score:
+          Score: &nbsp;
           {score}
         </h3>
       </header>

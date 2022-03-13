@@ -15,6 +15,10 @@ export function player(state = initialStateUser, action) {
       name: action.payload.name,
       gravatarEmail: action.payload.email,
     };
+  case 'ADD_SCORE':
+    return {
+      ...state, score: action.score,
+    };
   default:
     return state;
   }
