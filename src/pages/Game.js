@@ -5,6 +5,7 @@ import fetchQuestions from '../service/fetchQuestions';
 import fetchToken from '../service/fetchToken';
 import Header from '../components/Header';
 import '../css/Game.css';
+import { addScore } from '../redux/actions';
 
 /* referência para uso do sort(): https://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array */
 
@@ -44,35 +45,37 @@ class Game extends Component {
     answerButtons.forEach((button) => {
       if (button.innerText === correctAnswer) {
         button.className = 'correct_answer';
-      } else { button.className = 'wrong_answers'; }
+      } else {
+        button.className = 'wrong_answers';
+      }
     });
-  }
+    this.setState({ isDisabed: true });
+  };
 
   answersRandom = () => {
     const { questions } = this.state;
     const { results } = questions;
-    const answers = results
-      .map((
-        { correct_answer: correctAnswer, incorrect_answers: incorrectAnswers },
-      ) => [...incorrectAnswers, correctAnswer].sort(() => Math.random() - 1 / 2));
+    const answers = results.map(
+      ({
+        correct_answer: correctAnswer,
+        incorrect_answers: incorrectAnswers,
+      }) => [...incorrectAnswers, correctAnswer].sort(() => Math.random() - 1 / 2),
+    );
     this.setState({ answers });
-  }
+  };
 
   timeToAwsers = () => {
-    const { timming } = this.state;
-    if (timming > 0) return this.setState({ timming: timming - 1 });
+    const { timming, isDisabed } = this.state;
+    if (timming > 0 && !isDisabed) return this.setState({ timming: timming - 1 });
     return this.isDisabed();
-  }
+  };
 
   mapQuestions = () => {
     const { questions, answers, isDisabed } = this.state;
     const { results } = questions;
     if (results && answers.length > 0) {
-      return results
-        .map((
-          { category, correct_answer: correctAnswer, question },
-          index,
-        ) => {
+      return results.map(
+        ({ category, correct_answer: correctAnswer, question }, index) => {
           const addIndex = () => {
             indexWrongQuestions += 1;
             return indexWrongQuestions - 1;
@@ -82,32 +85,84 @@ class Game extends Component {
               <h4 data-testid="question-text">{question}</h4>
               <p data-testid="question-category">{category}</p>
               <div data-testid="answer-options">
-                {
-                  answers[0].map((questionsClick, indexQuestions) => (
-                    <button
-                      onClick={ () => this.checkAnswer(correctAnswer) }
-                      className="answer-buttons"
-                      key={ indexQuestions }
-                      disabled={ isDisabed }
-                      data-testid={ questionsClick.includes(correctAnswer)
-                        ? 'correct-answer' : `wrong-answer-${addIndex()}` }
-                      type="button"
-                    >
-                      {questionsClick}
-                    </button>
-                  ))
-                }
+                {answers[0].map((questionsClick, indexQuestions) => (
+                  <button
+                    onClick={ (e) => {
+                      this.checkAnswer(correctAnswer);
+                      this.setPointsOnGlobal(e);
+                    } }
+                    className="answer-buttons"
+                    key={ indexQuestions }
+                    disabled={ isDisabed }
+                    data-testid={
+                      questionsClick.includes(correctAnswer)
+                        ? 'correct-answer'
+                        : `wrong-answer-${addIndex()}`
+                    }
+                    type="button"
+                  >
+                    {questionsClick}
+                  </button>
+                ))}
               </div>
             </section>
           );
-        })[0];
+        },
+      )[0];
     }
-  }
+  };
 
-  isDisabed =() => {
+  isDisabed = () => {
     const { timming } = this.state;
-    if (timming === 0) { this.setState({ isDisabed: true }); }
-  }
+    if (timming === 0) {
+      this.setState({ isDisabed: true });
+    }
+  };
+
+  saveToLocalStorage = (name, score, url) => {
+    const ranking = { name, score, picture: url };
+    localStorage.setItem('ranking', JSON.stringify(ranking));
+  };
+
+  setPointsOnGlobal = (e) => {
+    /*  console.log(e.target.className); */
+    if (e.target.className === 'correct_answer') {
+      const { dispatch } = this.props;
+      dispatch(addScore(this.sumPoints(this.getDifficult())));
+    }
+  };
+
+  getDifficult = () => {
+    const currentQuestion = document.getElementsByTagName('h4');
+    const questionActual = currentQuestion[0].innerText;
+    /* console.log(questionActual); */
+    const { questions } = this.state;
+    const { results } = questions;
+    /*  console.log(results); */
+    const find = results.find(
+      (question) => question.question === questionActual,
+    );
+    /*  console.log(find); */
+    const difficult = find.difficulty;
+    return difficult;
+  };
+
+  sumPoints = (difficulty) => {
+    const TRES = 3;
+    let difficultyValue = 0;
+    if (difficulty === 'easy') {
+      difficultyValue = 1;
+    } else if (difficulty === 'medium') {
+      difficultyValue = 2;
+    } else if (difficulty === 'hard') {
+      difficultyValue = TRES;
+    }
+    const DEZ = 10;
+    const { timming } = this.state;
+    console.log(timming);
+    const calc = DEZ + (timming * difficultyValue);
+    return calc;
+  };
 
   render() {
     const { timming } = this.state;
@@ -124,6 +179,7 @@ const mapStateToProps = (state) => ({ token: state.token });
 
 Game.propTypes = {
   token: PropTypes.string.isRequired,
+  dispatch: PropTypes.func.isRequired,
 };
 
 export default connect(mapStateToProps)(Game);

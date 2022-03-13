@@ -10,6 +10,11 @@ const fetchApiToken = (token) => ({
   token,
 });
 
+export const addScore = (score) => ({
+  type: 'ADD_SCORE',
+  score,
+});
+
 export const fetchApiTokenThunk = (response) => async (dispatch) => {
   storagePlayers(response);
   dispatch(fetchApiToken(response));

@@ -1,15 +1,15 @@
-const INITIAL_STATE = {
-  questions: [],
-
+/* const INITIAL_STATE = {
+  score: 0,
 };
 
 export default function questions(state = INITIAL_STATE, action) {
   switch (action.type) {
-  case 'GET_QUESTIONS':
+  case 'ADD_SCORE':
     return {
-      ...state,
+      ...state, score: action.score,
     };
   default:
     return state;
   }
 }
+ */
