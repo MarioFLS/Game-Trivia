@@ -35,7 +35,7 @@ class Header extends Component {
           {userName}
         </h3>
         <h3 data-testid="header-score">
-          Score: &nbsp;
+          {/* Score: */}
           {score}
         </h3>
       </header>

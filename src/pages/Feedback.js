@@ -11,7 +11,7 @@ export class Feedback extends Component {
       <div>
         <Header />
         <main>
-          <p data-testid="feedback-total-question">{`Você acertou ${assertions}`}</p>
+          <p data-testid="feedback-total-question">{assertions}</p>
           <p data-testid="feedback-text">
             {assertions < NUMBER_ASSERTIONS ? 'Could be better...' : 'Well Done!'}
           </p>

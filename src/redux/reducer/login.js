@@ -17,7 +17,7 @@ export function player(state = initialStateUser, action) {
     };
   case 'ADD_SCORE':
     return {
-      ...state, score: action.score,
+      ...state, score: state.score + action.score,
     };
   default:
     return state;
