@@ -56,8 +56,18 @@ class Game extends Component {
 
   buttonNextQuestion = () => {
     const { indexQuestion } = this.state;
-    this.setState({ indexQuestion: indexQuestion + 1, isButtonVisible: false });
-  }
+    this.setState({
+      indexQuestion: indexQuestion + 1,
+      isButtonVisible: false,
+      isDisabed: false,
+      timming: 30,
+    });
+    const { history } = this.props;
+    const QUATRO = 4;
+    if (indexQuestion === QUATRO) {
+      history.push('/feedback');
+    }
+  };
 
   /* referência para uso do sort(): https://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array */
   answersRandom = () => {
@@ -74,7 +84,7 @@ class Game extends Component {
 
   timeToAwsers = () => {
     const { timming, isDisabed } = this.state;
-    if (timming > 0 && !isDisabed) return this.setState({ timming: timming - 1 });
+    if (timming > 0 && !isDisabed) { return this.setState({ timming: timming - 1 }); }
     return this.isDisabed();
   };
 
@@ -93,8 +103,8 @@ class Game extends Component {
               <h4 data-testid="question-text">{question}</h4>
               <p data-testid="question-category">{category}</p>
               <div data-testid="answer-options">
-                {
-                  answers[indexQuestion].map((questionsClick, indexQuestions) => (
+                {answers[indexQuestion].map(
+                  (questionsClick, indexQuestions) => (
                     <button
                       onClick={ (e) => {
                         this.checkAnswer(correctAnswer);
@@ -103,14 +113,17 @@ class Game extends Component {
                       className="answer-buttons"
                       key={ indexQuestions }
                       disabled={ isDisabed }
-                      data-testid={ questionsClick.includes(correctAnswer)
-                        ? 'correct-answer' : `wrong-answer-${addIndex()}` }
+                      data-testid={
+                        questionsClick.includes(correctAnswer)
+                          ? 'correct-answer'
+                          : `wrong-answer-${addIndex()}`
+                      }
                       type="button"
                     >
                       {questionsClick}
                     </button>
-                  ))
-                }
+                  ),
+                )}
               </div>
             </section>
           );
@@ -122,7 +135,7 @@ class Game extends Component {
   isDisabed = () => {
     const { timming } = this.state;
     if (timming === 0) {
-      this.setState({ isDisabed: true });
+      this.setState({ isDisabed: true, isButtonVisible: true });
     }
   };
 
@@ -167,7 +180,8 @@ class Game extends Component {
     const DEZ = 10;
     const { timming } = this.state;
     console.log(timming);
-    const calc = DEZ + (timming * difficultyValue);
+    const calc = DEZ + timming * difficultyValue;
+    console.log(typeof calc);
     return calc;
   };
 
@@ -177,15 +191,15 @@ class Game extends Component {
       <div>
         <Header />
         {this.mapQuestions()}
-        { isButtonVisible
-            && (
-              <button
-                type="button"
-                onClick={ this.buttonNextQuestion }
-                data-testid="btn-next"
-              >
-                Next
-              </button>) }
+        {isButtonVisible && (
+          <button
+            type="button"
+            onClick={ this.buttonNextQuestion }
+            data-testid="btn-next"
+          >
+            Next
+          </button>
+        )}
         <h3>{`Você tem: ${timming}s`}</h3>
       </div>
     );
@@ -194,8 +208,11 @@ class Game extends Component {
 const mapStateToProps = (state) => ({ token: state.token });
 
 Game.propTypes = {
-  token: PropTypes.string.isRequired,
   dispatch: PropTypes.func.isRequired,
+  history: PropTypes.shape({
+    push: PropTypes.func.isRequired,
+  }).isRequired,
+  token: PropTypes.string.isRequired,
 };
 
 export default connect(mapStateToProps)(Game);
