@@ -49,6 +49,7 @@ class Game extends Component {
         button.className = 'wrong_answers';
       }
     });
+    this.setState({ isDisabed: true });
   };
 
   answersRandom = () => {
@@ -64,8 +65,8 @@ class Game extends Component {
   };
 
   timeToAwsers = () => {
-    const { timming } = this.state;
-    if (timming > 0) return this.setState({ timming: timming - 1 });
+    const { timming, isDisabed } = this.state;
+    if (timming > 0 && !isDisabed) return this.setState({ timming: timming - 1 });
     return this.isDisabed();
   };
 
@@ -158,6 +159,7 @@ class Game extends Component {
     }
     const DEZ = 10;
     const { timming } = this.state;
+    console.log(timming);
     const calc = DEZ + (timming * difficultyValue);
     return calc;
   };
