@@ -20,7 +20,7 @@ class Game extends Component {
     indexQuestion: 0,
     answers: [],
     timming: 30,
-    isDisabed: false,
+    isDisabled: false,
   };
 
   async componentDidMount() {
@@ -51,7 +51,7 @@ class Game extends Component {
         button.className = 'wrong_answers';
       }
     });
-    this.setState({ isDisabed: true, isButtonVisible: true });
+    this.setState({ isDisabled: true, isButtonVisible: true });
   };
 
   buttonNextQuestion = () => {
@@ -59,12 +59,14 @@ class Game extends Component {
     this.setState({
       indexQuestion: indexQuestion + 1,
       isButtonVisible: false,
-      isDisabed: false,
+      isDisabled: false,
       timming: 30,
     });
-    const { history } = this.props;
+    const { history, name, score, picture } = this.props;
     const QUATRO = 4;
+
     if (indexQuestion === QUATRO) {
+      this.saveToLocalStorage(name, score, picture);
       history.push('/feedback');
     }
   };
@@ -83,13 +85,13 @@ class Game extends Component {
   };
 
   timeToAwsers = () => {
-    const { timming, isDisabed } = this.state;
-    if (timming > 0 && !isDisabed) { return this.setState({ timming: timming - 1 }); }
-    return this.isDisabed();
+    const { timming, isDisabled } = this.state;
+    if (timming > 0 && !isDisabled) { return this.setState({ timming: timming - 1 }); }
+    return this.isDisabled();
   };
 
   mapQuestions = () => {
-    const { questions, answers, isDisabed, indexQuestion } = this.state;
+    const { questions, answers, isDisabled, indexQuestion } = this.state;
     const { results } = questions;
     if (results && answers.length > 0) {
       return results.map(
@@ -112,7 +114,7 @@ class Game extends Component {
                       } }
                       className="answer-buttons"
                       key={ indexQuestions }
-                      disabled={ isDisabed }
+                      disabled={ isDisabled }
                       data-testid={
                         questionsClick.includes(correctAnswer)
                           ? 'correct-answer'
@@ -132,20 +134,34 @@ class Game extends Component {
     }
   };
 
-  isDisabed = () => {
+  isDisabled = () => {
     const { timming } = this.state;
     if (timming === 0) {
-      this.setState({ isDisabed: true, isButtonVisible: true });
+      this.setState({ isDisabled: true, isButtonVisible: true });
     }
   };
 
-  saveToLocalStorage = (name, score, url) => {
-    const ranking = { name, score, picture: url };
-    localStorage.setItem('ranking', JSON.stringify(ranking));
-  };
+  // referencia para salvar múltiplos valores na mesma chave do localStorage:
+  // https://medium.com/@lameckanao/armazenando-e-manipulando-dados-no-localstorage-7bcc901ba12b
+  saveToLocalStorage = (name, score, picture) => {
+    const ranking = { name, score, picture };
+    if (localStorage.getItem('ranking') === null) {
+      // Adicionando um array com um objeto no localstorage
+      localStorage.setItem('ranking', JSON.stringify([ranking]));
+    } else {
+      // Copiando o array existente no localstorage e adicionando o novo objeto ao final.
+      localStorage.setItem(
+        'ranking',
+        // O JSON.parse transforma a string em JSON novamente, o inverso do JSON.strigify
+        JSON.stringify([
+          ...JSON.parse(localStorage.getItem('ranking')),
+          ranking,
+        ]/* .sort((usera, userb) => userb.score - usera.score) */),
+      );
+    }
+  }
 
   setPointsOnGlobal = (e) => {
-    /*  console.log(e.target.className); */
     if (e.target.className === 'correct_answer') {
       const { dispatch } = this.props;
       dispatch(addScore(this.sumPoints(this.getDifficult())));
@@ -155,14 +171,11 @@ class Game extends Component {
   getDifficult = () => {
     const currentQuestion = document.getElementsByTagName('h4');
     const questionActual = currentQuestion[0].innerText;
-    /* console.log(questionActual); */
     const { questions } = this.state;
     const { results } = questions;
-    /*  console.log(results); */
     const find = results.find(
       (question) => question.question === questionActual,
     );
-    /*  console.log(find); */
     const difficult = find.difficulty;
     return difficult;
   };
@@ -179,9 +192,7 @@ class Game extends Component {
     }
     const DEZ = 10;
     const { timming } = this.state;
-    console.log(timming);
     const calc = DEZ + timming * difficultyValue;
-    console.log(typeof calc);
     return calc;
   };
 
@@ -205,13 +216,21 @@ class Game extends Component {
     );
   }
 }
-const mapStateToProps = (state) => ({ token: state.token });
+const mapStateToProps = (state) => ({
+  token: state.token,
+  name: state.player.name,
+  score: state.player.score,
+  picture: state.player.userURL,
+});
 
 Game.propTypes = {
   dispatch: PropTypes.func.isRequired,
   history: PropTypes.shape({
     push: PropTypes.func.isRequired,
   }).isRequired,
+  name: PropTypes.string.isRequired,
+  picture: PropTypes.string.isRequired,
+  score: PropTypes.number.isRequired,
   token: PropTypes.string.isRequired,
 };
 
