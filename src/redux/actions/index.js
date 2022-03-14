@@ -5,6 +5,11 @@ export const saveUser = (payload) => ({
   payload,
 });
 
+export const saveURL = (url) => ({
+  type: 'ADD_URL',
+  url,
+});
+
 const fetchApiToken = (token) => ({
   type: 'ADD_TOKEN',
   token,

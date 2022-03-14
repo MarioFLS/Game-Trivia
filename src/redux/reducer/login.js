@@ -3,6 +3,7 @@ const initialStateUser = {
   assertions: 0,
   score: 0,
   gravatarEmail: '',
+  userURL: '',
 };
 
 const initialStateToken = '';
@@ -17,7 +18,14 @@ export function player(state = initialStateUser, action) {
     };
   case 'ADD_SCORE':
     return {
-      ...state, score: state.score + action.score,
+      ...state,
+      score: state.score + action.score,
+      assertions: state.assertions + 1,
+    };
+  case 'ADD_URL':
+    return {
+      ...state,
+      userURL: action.url,
     };
   default:
     return state;
