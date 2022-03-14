@@ -143,8 +143,8 @@ class Game extends Component {
 
   // referencia para salvar múltiplos valores na mesma chave do localStorage:
   // https://medium.com/@lameckanao/armazenando-e-manipulando-dados-no-localstorage-7bcc901ba12b
-  saveToLocalStorage = (name, score, url) => {
-    const ranking = { name, score, url };
+  saveToLocalStorage = (name, score, picture) => {
+    const ranking = { name, score, picture };
     if (localStorage.getItem('ranking') === null) {
       // Adicionando um array com um objeto no localstorage
       localStorage.setItem('ranking', JSON.stringify([ranking]));
@@ -156,13 +156,12 @@ class Game extends Component {
         JSON.stringify([
           ...JSON.parse(localStorage.getItem('ranking')),
           ranking,
-        ]),
+        ]/* .sort((usera, userb) => userb.score - usera.score) */),
       );
     }
   }
 
   setPointsOnGlobal = (e) => {
-    /*  console.log(e.target.className); */
     if (e.target.className === 'correct_answer') {
       const { dispatch } = this.props;
       dispatch(addScore(this.sumPoints(this.getDifficult())));
@@ -172,14 +171,11 @@ class Game extends Component {
   getDifficult = () => {
     const currentQuestion = document.getElementsByTagName('h4');
     const questionActual = currentQuestion[0].innerText;
-    /* console.log(questionActual); */
     const { questions } = this.state;
     const { results } = questions;
-    /*  console.log(results); */
     const find = results.find(
       (question) => question.question === questionActual,
     );
-    /*  console.log(find); */
     const difficult = find.difficulty;
     return difficult;
   };
@@ -196,9 +192,7 @@ class Game extends Component {
     }
     const DEZ = 10;
     const { timming } = this.state;
-    console.log(timming);
     const calc = DEZ + timming * difficultyValue;
-    console.log(typeof calc);
     return calc;
   };
 

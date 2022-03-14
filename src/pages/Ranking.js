@@ -4,12 +4,12 @@ import React, { Component } from 'react';
 export class Ranking extends Component {
   getLocalStorage = () => {
     const users = JSON.parse(localStorage.getItem('ranking'));
-    const usersSort = users.sort((usera, userb) => userb.score - usera.score);
-    return usersSort.map(({ name, score, url }, index) => (
+    const usersSort = users.sort((userA, userB) => userB.score - userA.score);
+    return usersSort.map(({ name, score, picture }, index) => (
       <section key={ index }>
+        <img src={ picture } alt="profile avatar" />
         <p data-testid={ `player-name-${index}` }>{ name }</p>
         <p data-testid={ `player-score-${index}` }>{ score }</p>
-        <img src={ url } alt="profile avatar" />
       </section>
     ));
   }
