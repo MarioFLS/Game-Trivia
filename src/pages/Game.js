@@ -154,7 +154,7 @@ class Game extends Component {
         'ranking',
         // O JSON.parse transforma a string em JSON novamente, o inverso do JSON.strigify
         JSON.stringify([
-          ...JSON.parse(localStorage.getItem('items')),
+          ...JSON.parse(localStorage.getItem('ranking')),
           ranking,
         ]),
       );
