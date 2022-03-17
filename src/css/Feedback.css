@@ -1,0 +1,71 @@
+.feedback-container {
+  background-image: url("../images/tile_background.png");
+  background-color: rgb(1, 7, 37);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-around;
+  margin: 0.5em auto;
+  height: 85vh;
+  width: 95%;
+  box-shadow: 10px 5px 10px #0202022c;
+  font-size: 2em;
+}
+
+.inform-section {
+  width: 90%;
+  height: 60%;
+  background-color: rgba(0, 0, 0, 0.521);
+  display: flex;
+  text-align: center;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-around;
+  font-size: 2em;
+}
+
+.inform-section > p:nth-last-child(1) {
+  text-transform: uppercase;
+  font-weight: 800;
+  letter-spacing: 2px;
+}
+
+.btn-container {
+  display: flex;
+  width: 100%;
+  height: 30%;
+  align-items: center;
+  justify-content: space-evenly;
+  
+}
+
+.btn-play-feedback {
+  background-color: green;
+  border: none;
+  box-shadow: 10px 5px 10px #0202022c;
+  color: white;
+  font-size: 1em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 30%;
+  padding: 0.8em;
+  width: 10em;
+  border-radius: 20px;
+  cursor: pointer;
+  box-shadow: 10px 8px 20px #020202ab;
+}
+
+.btn-ranking {
+  background-color: rgb(4, 35, 121);
+  border: none;
+  box-shadow: 1px 3px 10px #1717185e;
+  color: white;
+  cursor: pointer;
+  font-size: 1em;
+  height: 30%;
+  padding: 0.5em;
+  width: 6em;
+  border-radius: 20px;
+  box-shadow: 10px 8px 20px #020202ab;
+}

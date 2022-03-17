@@ -53,7 +53,6 @@ class Login extends Component {
                 type="text"
                 name="name"
                 id="name"
-                data-testid="input-player-name"
                 placeholder="Digite seu nome"
                 onChange={ this.handleChange }
                 value={ name }
@@ -73,7 +72,6 @@ class Login extends Component {
             <button
               type="submit"
               className="btn-play"
-              data-testid="btn-play"
               disabled={ isDisabled }
               onClick={ (event) => this.HandleClickButton(event) }
             >
@@ -82,7 +80,6 @@ class Login extends Component {
             <button
               className="btn-config"
               type="button"
-              data-testid="btn-settings"
               onClick={ () => history.push('/config') }
             >
               Configurações

@@ -7,10 +7,7 @@ import Header from '../components/Header';
 import '../css/Game.css';
 import { addScore } from '../redux/actions';
 
-/* referência para uso do sort(): https://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array */
-
 const oneSecond = 1000;
-let indexWrongQuestions = 0;
 const errorApi = 3;
 
 class Game extends Component {
@@ -19,14 +16,16 @@ class Game extends Component {
     isButtonVisible: false,
     indexQuestion: 0,
     answers: [],
-    timming: 30,
+    timming: 20,
     isDisabled: false,
+    idInterval: '',
   };
 
   async componentDidMount() {
     await this.getQuestions();
     this.mapQuestions();
-    setInterval(this.timeToAwsers, oneSecond);
+    this.setState({ idInterval: setInterval(this.timeToAwsers, oneSecond) });
+
     this.answersRandom();
   }
 
@@ -46,32 +45,32 @@ class Game extends Component {
     const answerButtons = document.querySelectorAll('.answer-buttons');
     answerButtons.forEach((button) => {
       if (button.innerText === correctAnswer) {
-        button.className = 'correct_answer';
+        button.classList.add('correct_answer');
       } else {
-        button.className = 'wrong_answers';
+        button.classList.add('wrong_answers');
       }
     });
     this.setState({ isDisabled: true, isButtonVisible: true });
   };
 
   buttonNextQuestion = () => {
-    const { indexQuestion } = this.state;
+    const { indexQuestion, idInterval } = this.state;
     this.setState({
       indexQuestion: indexQuestion + 1,
       isButtonVisible: false,
       isDisabled: false,
       timming: 30,
+      idInterval: setInterval(this.timeToAwsers, oneSecond),
     });
     const { history, name, score, picture } = this.props;
     const QUATRO = 4;
-
+    clearInterval(idInterval);
     if (indexQuestion === QUATRO) {
       this.saveToLocalStorage(name, score, picture);
       history.push('/feedback');
     }
   };
 
-  /* referência para uso do sort(): https://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array */
   answersRandom = () => {
     const { questions } = this.state;
     const { results } = questions;
@@ -85,59 +84,67 @@ class Game extends Component {
   };
 
   timeToAwsers = () => {
-    const { timming, isDisabled } = this.state;
-    if (timming > 0 && !isDisabled) { return this.setState({ timming: timming - 1 }); }
+    const { timming, isDisabled, idInterval } = this.state;
+    if (timming > 0 && !isDisabled) {
+      return this.setState({ timming: timming - 1 });
+    }
+    clearInterval(idInterval);
     return this.isDisabled();
   };
 
   mapQuestions = () => {
-    const { questions, answers, isDisabled, indexQuestion } = this.state;
+    const { questions, answers, isDisabled, indexQuestion, isButtonVisible } = this.state;
     const { results } = questions;
     if (results && answers.length > 0) {
       return results.map(
-        ({ category, correct_answer: correctAnswer, question }, index) => {
-          const addIndex = () => {
-            indexWrongQuestions += 1;
-            return indexWrongQuestions - 1;
-          };
-          return (
-            <section key={ index }>
-              <h4 data-testid="question-text">{question}</h4>
-              <p data-testid="question-category">{category}</p>
-              <div data-testid="answer-options">
-                {answers[indexQuestion].map(
-                  (questionsClick, indexQuestions) => (
-                    <button
-                      onClick={ (e) => {
-                        this.checkAnswer(correctAnswer);
-                        this.setPointsOnGlobal(e);
-                      } }
-                      className="answer-buttons"
-                      key={ indexQuestions }
-                      disabled={ isDisabled }
-                      data-testid={
-                        questionsClick.includes(correctAnswer)
-                          ? 'correct-answer'
-                          : `wrong-answer-${addIndex()}`
-                      }
-                      type="button"
-                    >
-                      {questionsClick}
-                    </button>
-                  ),
-                )}
-              </div>
+        ({ category, correct_answer: correctAnswer, question, difficulty }, index) => (
+          <section className="question-container" key={ index }>
+            <div
+              className="questions-text-container"
+              dangerouslySetInnerHTML={ { __html: `<h4>${question}</h4>` } }
+            />
+            <section className="specifications-container">
+              <p>{`${category}`}</p>
+              <p>{`Difficulty: ${difficulty}`}</p>
             </section>
-          );
-        },
+            <div className="answer-buttons-container">
+              {answers[indexQuestion].map(
+                (questionsClick, indexQuestions) => (
+                  // eslint-disable-next-line jsx-a11y/control-has-associated-label
+                  <button
+                    key={ indexQuestions }
+                    onClick={ (e) => {
+                      this.checkAnswer(correctAnswer);
+                      this.setPointsOnGlobal(e);
+                    } }
+                    className="answer-buttons"
+                    disabled={ isDisabled }
+                    type="button"
+                    dangerouslySetInnerHTML={ { __html: `${questionsClick}` } }
+                  />
+                ),
+              )}
+            </div>
+            {isButtonVisible && (
+              <button
+                type="button"
+                onClick={ this.buttonNextQuestion }
+                className="btn-next"
+              >
+                Next
+              </button>
+            )}
+          </section>
+        ),
       )[indexQuestion];
     }
   };
 
   isDisabled = () => {
-    const { timming } = this.state;
+    const { timming, idInterval } = this.state;
     if (timming === 0) {
       this.setState({ isDisabled: true, isButtonVisible: true });
+      clearInterval(idInterval);
     }
   };
 
@@ -156,13 +163,13 @@ class Game extends Component {
         JSON.stringify([
           ...JSON.parse(localStorage.getItem('ranking')),
           ranking,
-        ]/* .sort((usera, userb) => userb.score - usera.score) */),
+        ]),
       );
     }
   }
 
-  setPointsOnGlobal = (e) => {
-    if (e.target.className === 'correct_answer') {
+  setPointsOnGlobal = (event) => {
+    if (event.target.className.includes('correct_answer')) {
       const { dispatch } = this.props;
       dispatch(addScore(this.sumPoints(this.getDifficult())));
     }
@@ -170,14 +177,14 @@ class Game extends Component {
 
   getDifficult = () => {
     const currentQuestion = document.getElementsByTagName('h4');
-    const questionActual = currentQuestion[0].innerText;
+    const questionActual = currentQuestion[0].innerHTML;
     const { questions } = this.state;
     const { results } = questions;
     const find = results.find(
-      (question) => question.question === questionActual,
+      ({ question }) => question === questionActual,
     );
-    const difficult = find.difficulty;
-    return difficult;
+    if (results && find) return find.difficulty;
+    return 'medium';
   };
 
   sumPoints = (difficulty) => {
@@ -197,22 +204,16 @@ class Game extends Component {
   };
 
   render() {
-    const { timming, isButtonVisible } = this.state;
+    const { timming } = this.state;
     return (
-      <div>
+      <>
         <Header />
-        {this.mapQuestions()}
-        {isButtonVisible && (
-          <button
-            type="button"
-            onClick={ this.buttonNextQuestion }
-            data-testid="btn-next"
-          >
-            Next
-          </button>
-        )}
-        <h3>{`Você tem: ${timming}s`}</h3>
-      </div>
+        <main className="game-container">
+          <h2 className="timing">{`Você tem: ${timming} segundos`}</h2>
+
+          {this.mapQuestions()}
+        </main>
+      </>
     );
   }
 }

@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import md5 from 'crypto-js/md5';
 import { saveURL } from '../redux/actions';
+import '../css/Header.css';
 
 class Header extends Component {
   state = {
@@ -27,19 +28,16 @@ class Header extends Component {
     const { userImage } = this.state;
     const { userName, score } = this.props;
     return (
-      <header>
+      <header className="Header-Login">
         {userImage && <img
           src={ userImage }
           alt="logo"
-          data-testid="header-profile-picture"
         />}
-        <h3 data-testid="header-player-name">
-          Nome
+        <h3>
           {userName}
         </h3>
-        <h3 data-testid="header-score">
-          {/* Score: */}
-          {score}
+        <h3>
+          {`Score: ${score}`}
         </h3>
       </header>
     );

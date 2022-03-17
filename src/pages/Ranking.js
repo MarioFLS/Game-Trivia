@@ -8,8 +8,8 @@ export class Ranking extends Component {
     return usersSort.map(({ name, score, picture }, index) => (
       <section key={ index }>
         <img src={ picture } alt="profile avatar" />
-        <p data-testid={ `player-name-${index}` }>{ name }</p>
-        <p data-testid={ `player-score-${index}` }>{ score }</p>
+        <p>{ name }</p>
+        <p>{ score }</p>
       </section>
     ));
   }
@@ -18,12 +18,11 @@ export class Ranking extends Component {
     const { history } = this.props;
     return (
       <div>
-        <h2 data-testid="ranking-title">Ranking</h2>
+        <h2>Ranking</h2>
         <main>
           {this.getLocalStorage()}
           <button
             type="button"
-            data-testid="btn-go-home"
             onClick={ () => history.push('/') }
           >
             Play Again

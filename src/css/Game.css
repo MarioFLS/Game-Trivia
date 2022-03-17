@@ -1,7 +1,116 @@
-.correct_answer {
-  border: 3px solid rgb(6, 240, 15);
+.game-container {
+  width: 100vw;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
-.wrong_answers {
-  border: 3px solid red;
+.answer-buttons-container {
+  width: 80%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+}
+
+.answer-buttons {
+  border: none;
+  display: flex;
+  cursor: pointer;
+  align-items: center;
+  background-color: rgba(2, 2, 2, 0.877);
+  color: white;
+  border-radius: 10px;
+  font-size: 1.5em;
+  height: 2em;
+  padding: 30px;
+  margin-bottom: 50px;
+  box-shadow: 10px 5px 10px #0202022c;
+}
+
+.answer-buttons:hover {
+  transform: scale(1.1)
+
+}
+
+.answer-buttons:nth-child(1) {
+  margin-top: 30px;
+} 
+
+.answer-buttons:disabled {
+  cursor:not-allowed;
+  color: rgba(255, 255, 255, 0.685);
+  background-color: rgba(0, 0, 0, 0.527);
+}
+
+.correct_answer:disabled {
+  background-color: rgba(6, 240, 14, 0.678);
+  color: white
+}
+
+.wrong_answers:disabled {
+  background-color: rgba(255, 0, 0, 0.514);
+  color: white
+}
+
+.question-container {
+  display: flex;
+  flex-direction: column;
+  background-image: url("../images/tile_background.png");
+  background-color: rgb(1, 7, 37);
+  align-items: center;
+  justify-content: center;
+  justify-items: center;
+  align-content: space-around;
+  margin: 1em 0;
+  width: 80%;
+  box-shadow: 10px 5px 10px #0202022c;
+}
+
+.questions-text-container {
+  background-color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 30%;
+  padding: 20px;
+  width: 100%;
+  font-size: 2em;
+  color: black;
+  box-shadow: 0px 5px 20px #1f1f1f65;
+}
+
+.questions-text-container > h4 {
+  font-weight: 800;
+  letter-spacing: 1.5px;
+  text-align: center;
+  user-select: none;
+}
+
+.specifications-container > p {
+  margin-top: 30px;
+  font-size: 2em;
+  text-align: center;
+  user-select: none;
+}
+
+.btn-next {
+  background-color: green;
+  border: none;
+  box-shadow: 10px 5px 10px #0202022c;
+  color: white;
+  font-size: 1.5em;
+  height: 20%;
+  margin-bottom: 1%;
+  margin-top: 1%;
+  padding: 0.8em;
+  width: 10em;
+  cursor: pointer;
+}
+
+.timing {
+  font-size: 3em;
+  text-align: center;
+  margin-top: 30px;
+  text-transform: uppercase;
 }
