@@ -1,15 +1,17 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
+import '../css/Ranking.css';
+import Header from '../components/Header';
 
 export class Ranking extends Component {
   getLocalStorage = () => {
     const users = JSON.parse(localStorage.getItem('ranking'));
     const usersSort = users.sort((userA, userB) => userB.score - userA.score);
     return usersSort.map(({ name, score, picture }, index) => (
-      <section key={ index }>
+      <section className="card-user" key={ index }>
         <img src={ picture } alt="profile avatar" />
-        <p>{ name }</p>
-        <p>{ score }</p>
+        <p>{name}</p>
+        <p>{`Seus Pontos: ${score}`}</p>
       </section>
     ));
   }
@@ -17,16 +19,20 @@ export class Ranking extends Component {
   render() {
     const { history } = this.props;
     return (
-      <div>
-        <h2>Ranking</h2>
+      <div className="main-ranking-container">
+        <Header />
+        <h2 className="title">Ranking</h2>
         <main>
-          {this.getLocalStorage()}
           <button
             type="button"
+            className="btn-play-ranking"
             onClick={ () => history.push('/') }
           >
             Play Again
           </button>
+          <div className="ranking-container">
+            {this.getLocalStorage()}
+          </div>
         </main>
       </div>
     );

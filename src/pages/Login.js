@@ -40,7 +40,6 @@ class Login extends Component {
 
   render() {
     const { name, email, isDisabled } = this.state;
-    const { history } = this.props;
     return (
       <div>
         <div className="login-container">
@@ -77,13 +76,13 @@ class Login extends Component {
             >
               Play
             </button>
-            <button
+            {/* <button
               className="btn-config"
               type="button"
               onClick={ () => history.push('/config') }
             >
               Configurações
-            </button>
+            </button> */}
           </form>
         </div>
       </div>
