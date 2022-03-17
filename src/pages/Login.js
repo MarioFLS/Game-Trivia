@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import '../css/Login.css';
 import { connect } from 'react-redux';
-import logo from '../trivia.png';
+import logo from '../images/trivia.png';
 import fetchToken from '../service/fetchToken';
 import { fetchApiTokenThunk, saveUser } from '../redux/actions';
 
