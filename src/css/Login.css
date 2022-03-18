@@ -36,16 +36,24 @@
 }
 
 .btn-play {
+  border-radius: 20px;
   background-color: green;
   border: none;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   box-shadow: 1px 3px 10px #1717185e;
   color: white;
-  font-size: 1.5em;
+  font-size: 2em;
+  letter-spacing: 1px;
+  font-weight: 800;
+  text-transform: uppercase;
   height: 20%;
   margin-bottom: 10%;
   margin-top: 6%;
   padding: 0.3em;
-  width: 10em;
+  width: 8em;
 }
 
 .btn-play:disabled {
@@ -59,19 +67,24 @@
 }
 
 
-.btn-config {
+.btn-ranking {
   background-color: rgb(4, 35, 121);
   border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   box-shadow: 1px 3px 10px #1717185e;
   color: white;
   cursor: pointer;
-  font-size: 1em;
-  height: 20%;
+  font-size: 1.5em;
+  height: 30%;
   padding: 0.5em;
-  width: 10em;
+  width: 8em;
+  border-radius: 20px;
+  box-shadow: 10px 8px 20px #020202ab;
 }
 
-.btn-config:hover {
+.btn-ranking:hover {
   background-color: rgb(3, 19, 65);
   cursor: pointer;
 }

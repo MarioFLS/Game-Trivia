@@ -39,7 +39,7 @@ export class Feedback extends Component {
               Play Again
             </button>
             <button
-              className="btn-ranking"
+              className="btn-ranking-feedback"
               type="button"
               onClick={ () => history.push('/ranking') }
             >

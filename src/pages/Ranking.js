@@ -4,20 +4,27 @@ import '../css/Ranking.css';
 import Header from '../components/Header';
 
 export class Ranking extends Component {
+  componentDidMount() {
+    this.getLocalStorage();
+  }
+
   getLocalStorage = () => {
     const users = JSON.parse(localStorage.getItem('ranking'));
-    const usersSort = users.sort((userA, userB) => userB.score - userA.score);
-    return usersSort.map(({ name, score, picture }, index) => (
-      <section className="card-user" key={ index }>
-        <img src={ picture } alt="profile avatar" />
-        <p>{name}</p>
-        <p>{`Seus Pontos: ${score}`}</p>
-      </section>
-    ));
+    return (users !== null ? users
+      .sort((userA, userB) => userB.score - userA.score)
+      .map(({ name, score, picture }, index) => (
+        <section className="card-user" key={ index }>
+          <img src={ picture } alt="profile avatar" />
+          <p>{name}</p>
+          <p>{`Seus Pontos: ${score}`}</p>
+        </section>
+      )) : <h3>INFELIZMENTE AINDA NÃO TEMOS RANKING</h3>);
   }
 
   render() {
     const { history } = this.props;
+    const users = JSON.parse(localStorage.getItem('ranking'));
+    console.log(users);
     return (
       <div className="main-ranking-container">
         <Header />
