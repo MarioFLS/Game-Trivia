@@ -18,7 +18,7 @@ export class Ranking extends Component {
           <p>{name}</p>
           <p>{`Seus Pontos: ${score}`}</p>
         </section>
-      )) : <h3>INFELIZMENTE AINDA NÃO TEMOS RANKING</h3>);
+      )) : <h3 className="no-Ranking">INFELIZMENTE AINDA NÃO TEMOS RANKING</h3>);
   }
 
   render() {

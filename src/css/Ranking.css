@@ -69,3 +69,12 @@ main {
   box-shadow: 10px 8px 20px #020202ab;
   margin-bottom: 30px;
 }
+
+.no-Ranking {
+  display: flex;
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+  font-size: 4em;
+  height: 50vh;
+}
