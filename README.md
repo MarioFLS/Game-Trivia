@@ -16,6 +16,12 @@ Essa Aplicação Permite:
 
 > Desenvolvida utilizando: React, JavaScript, Redux, HTML e CSS.
 
+## Colaboradores
+
+Essa aplicação foi feita em Colaboração com duas pessoas.
+- [Marcos Rafael](https://www.linkedin.com/mwlite/in/marcosrafaelpfreitas)
+- [Paulo Ferri](https://www.linkedin.com/in/paulo-afonso-ferri-de-souza-4766181b5/)
+
 ## Como utilizar
 
 > Entre na pasta do arquivo
