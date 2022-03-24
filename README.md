@@ -29,6 +29,10 @@ Utilize o comando: `cd trybetunes`
 
 > Instale as dependências: `npm install`
 
+### Entrando Direto na Aplicação
+
+> https://game-trivia-seven.vercel.app/
+
 ## Alguns Erros
 
 Infelizmente a API trás alguns particularidades. E por vezes pode trazer todas as respostas erradas. Temos noção desse erro, porém não é algo recorente e como dito é uma particularidade que não foi contornada. Mas isso não quebra a aplicação de forma alguma!
